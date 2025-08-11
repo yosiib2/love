@@ -3,22 +3,23 @@ import cors from 'cors'
 import 'dotenv/config'
 import connectDB from './configs/mongodb.js'
 import { clerkWebhooks } from './controllers/webhooks.js'
+import bodyParser from 'body-parser' // <-- import here
 
-// Initialize Express
 const app = express()
 await connectDB()
 
-// Middlewares
 app.use(cors())
 
-// Basic test route
 app.get('/', (req, res) => res.send("API Working"))
-app.post('/clerk', express.json(),clerkWebhooks)
 
-// Port setup
-const PORT = process.env.PORT || 7000
+// Use raw body parser ONLY for this webhook route
+app.post(
+  '/clerk',
+  bodyParser.raw({ type: 'application/json' }),
+  clerkWebhooks
+)
 
-// Start the server
+const PORT = process.env.PORT || 5000
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`)
 })
