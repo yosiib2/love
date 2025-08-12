@@ -2,12 +2,16 @@
 import { createContext, useEffect, useState } from "react";
 import { dummyCourses } from "../assets/assets"; // ✅ Make sure dummyCourses is an array
 import humanizeDuration from "humanize-duration";
+import { useAuth, useUser } from "@clerk/clerk-react";
 
 // Create context
 export const AppContext = createContext();
 
 // Provider component
 export const AppContextProvider = ({ children }) => {
+  const { getToken } = useAuth();
+  const { user } = useUser();
+
   const [allCourses, setAllCourses] = useState([]);
   const [enrolledCourses, setEnrolledCourses] = useState([]); // ✅ Moved here
 
@@ -81,6 +85,20 @@ export const AppContextProvider = ({ children }) => {
     setAllCourses(dummyCourses);
   }, []);
 
+  const logToken = async () => {
+    try {
+      console.log(await getToken());
+    } catch (error) {
+      console.error("Failed to get token:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (user) {
+      logToken();
+    }
+  }, [user]);
+
   // ✅ Provide values
   const value = {
     currency,
@@ -92,12 +110,8 @@ export const AppContextProvider = ({ children }) => {
     isEducator: isEducatorState,
     setIsEducator,
     enrolledCourses,
-    fetchUserEnrolledCourses
+    fetchUserEnrolledCourses,
   };
 
-  return (
-    <AppContext.Provider value={value}>
-      {children}
-    </AppContext.Provider>
-  );
+  return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
 };
