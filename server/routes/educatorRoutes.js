@@ -1,6 +1,11 @@
 import express from 'express'
-import { updateRoleToEducator } from '../controllers/educatorController.js';
+import { updateRoleToEducator } from '../controllers/educatorController.js'
+import { requireAuth } from '@clerk/express' // ✅ added authentication middleware
+
 const educatorRouter = express.Router()
+
 // Add Educator Role
-educatorRouter.get('update-role' , updateRoleToEducator)
-export default educatorRouter;
+// Changed from GET to PUT, added leading slash, and added requireAuth
+educatorRouter.put('/update-role', requireAuth(), updateRoleToEducator)
+
+export default educatorRouter
