@@ -6,6 +6,6 @@ const educatorRouter = express.Router()
 
 // Add Educator Role
 // Changed from GET to PUT, added leading slash, and added requireAuth
-educatorRouter.put('/update-role', requireAuth(), updateRoleToEducator)
+educatorRouter.get('/update-role', requireAuth(), updateRoleToEducator)
 
 export default educatorRouter
