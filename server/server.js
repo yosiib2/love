@@ -6,12 +6,14 @@ import { clerkWebhooks } from './controllers/webhooks.js'
 import bodyParser from 'body-parser' // <-- import here
 import educatorRouter from './routes/educatorRoutes.js'
 import { clerkMiddleware } from '@clerk/express'
+import connectCloudinary from './configs/cloudinary.js'
 
 const app = express()
 
 // Wrap in an async IIFE to use await at the top level
 ;(async () => {
   await connectDB()
+  await connectCloudinary()
   // Middlewares 
   app.use(cors())
   app.use(clerkMiddleware())
